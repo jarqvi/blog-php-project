@@ -1,0 +1,46 @@
+version: "3.8"
+services:
+  nginx:
+    build: ./nginx/
+    container_name: nginx-container
+    ports:
+    - 8800:80
+    links:
+    - php
+    volumes:
+    - ./www/html/:/var/www/html/
+  php:
+    image: php:8.2-fpm
+    container_name: php-container
+    expose:
+    - 9000
+    volumes_from:
+    - app-data
+  app-data:    
+      image: php:8.2-fpm  
+      container_name: app-data-container  
+      volumes:  
+        - ./www/html/:/var/www/html/  
+      command: "true"
+  mysql:    
+      image: mysql:8.0.12  
+      container_name: mysql-container  
+      volumes_from:  
+        - mysql-data  
+      environment:  
+        MYSQL_ROOT_PASSWORD: root
+      ports:
+        - 3306:3306
+  mysql-data:    
+      image: mysql:8.0.12  
+      container_name: mysql-data-container  
+      volumes:  
+        - /opt/mysql:/var/lib/mysql  
+      command: "true"
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: phpmyadmin-container
+    environment:
+      PMA_HOST: mysql-container
+    ports:
+      - 8000:80

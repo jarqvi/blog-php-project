@@ -18,18 +18,12 @@ services:
   mysql:    
       image: mysql:8.0.12  
       container_name: mysql-container  
-      volumes_from:  
-        - mysql-data  
+      volumes:  
+        - /opt/mysql:/var/lib/mysql 
       environment:  
         MYSQL_ROOT_PASSWORD: root
       ports:
         - 3306:3306
-  mysql-data:    
-      image: mysql:8.0.12  
-      container_name: mysql-data-container  
-      volumes:  
-        - /opt/mysql:/var/lib/mysql  
-      command: "true"
   phpmyadmin:
     image: phpmyadmin
     container_name: phpmyadmin-container
